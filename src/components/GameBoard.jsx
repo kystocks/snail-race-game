@@ -2,7 +2,7 @@ import RaceTrack from './RaceTrack';
 import Dice from './Dice';
 import Controls from './Controls';
 
-function GameBoard({ colors, snailPositions, trackLength, diceResults, isRolling, onRoll, predictions, totalRolls }) {
+function GameBoard({ colors, snailPositions, trackLength, diceResults, isRolling, onRoll, predictions, totalRolls, diceAnimationKeys }) {
   return (
     <div className="game-board">
       {/* Predictions Display */}
@@ -38,7 +38,7 @@ function GameBoard({ colors, snailPositions, trackLength, diceResults, isRolling
       </div>
 
       {/* Dice */}
-      <Dice results={diceResults} isRolling={isRolling} />
+      <Dice results={diceResults} isRolling={isRolling} animationKeys={diceAnimationKeys} />
 
       {/* Race Track */}
       <RaceTrack

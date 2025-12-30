@@ -20,6 +20,7 @@ function App() {
   // Dice state
   const [diceResults, setDiceResults] = useState([null, null]);
   const [isRolling, setIsRolling] = useState(false);
+  const [diceAnimationKeys, setDiceAnimationKeys] = useState([0, 0]); // Track animation triggers
 
   // Predictions
   const [predictions, setPredictions] = useState({
@@ -49,17 +50,59 @@ function App() {
     setIsRolling(true);
     setTotalRolls(prev => prev + 1);
 
-    // Random colors for dice
-    const dice1 = COLORS[Math.floor(Math.random() * 6)];
-    const dice2 = COLORS[Math.floor(Math.random() * 6)];
+    // Get snails that haven't finished yet
+    const finishedSnails = COLORS.filter(color => snailPositions[color] === TRACK_LENGTH - 1);
+    const activeSnails = COLORS.filter(color => !finishedSnails.includes(color));
 
-    setDiceResults([dice1, dice2]);
-
-    // Animate dice, then move snails
-    setTimeout(() => {
-      moveSnails(dice1, dice2);
+    // If all snails are finished, don't roll (shouldn't happen, but safety check)
+    if (activeSnails.length === 0) {
       setIsRolling(false);
-    }, 500);
+      return;
+    }
+
+    // Initial roll (might include finished snails) - trigger animation for both dice
+    const initialDice1 = COLORS[Math.floor(Math.random() * 6)];
+    const initialDice2 = COLORS[Math.floor(Math.random() * 6)];
+
+    setDiceResults([initialDice1, initialDice2]);
+    setDiceAnimationKeys(prev => [prev[0] + 1, prev[1] + 1]); // Trigger both animations
+
+    // Check which dice need rerolling
+    const dice1NeedsReroll = finishedSnails.includes(initialDice1);
+    const dice2NeedsReroll = finishedSnails.includes(initialDice2);
+    const needsReroll = dice1NeedsReroll || dice2NeedsReroll;
+
+    if (needsReroll) {
+      // Show initial roll for 1200ms, then reroll only the dice that need it
+      setTimeout(() => {
+        // Keep valid dice, reroll invalid ones
+        const dice1 = dice1NeedsReroll 
+          ? activeSnails[Math.floor(Math.random() * activeSnails.length)] 
+          : initialDice1;
+        const dice2 = dice2NeedsReroll 
+          ? activeSnails[Math.floor(Math.random() * activeSnails.length)] 
+          : initialDice2;
+        
+        setDiceResults([dice1, dice2]);
+        // Only increment animation keys for dice that changed
+        setDiceAnimationKeys(prev => [
+          dice1NeedsReroll ? prev[0] + 1 : prev[0],
+          dice2NeedsReroll ? prev[1] + 1 : prev[1]
+        ]);
+        
+        // Then move snails after showing the reroll
+        setTimeout(() => {
+          moveSnails(dice1, dice2);
+          setIsRolling(false);
+        }, 500);
+      }, 1200);
+    } else {
+      // No reroll needed, proceed normally
+      setTimeout(() => {
+        moveSnails(initialDice1, initialDice2);
+        setIsRolling(false);
+      }, 500);
+    }
   };
 
   // Move snails based on dice
@@ -144,6 +187,7 @@ function App() {
           onRoll={rollDice}
           predictions={predictions}
           totalRolls={totalRolls}
+          diceAnimationKeys={diceAnimationKeys}
         />
       )}
 

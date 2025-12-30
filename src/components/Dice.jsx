@@ -1,16 +1,18 @@
-function Dice({ results, isRolling }) {
+function Dice({ results, isRolling, animationKeys = [0, 0] }) {
   return (
     <div className="dice-container">
       <h2>Roll the Dice!</h2>
       <div className="dice-pair">
         <div
-          className={`die ${isRolling ? 'rolling' : ''}`}
+          key={`die-1-${animationKeys[0]}`}
+          className={`die rolling`}
           style={{ backgroundColor: results[0] || '#ccc' }}
         >
           {results[0] ? '🎲' : '?'}
         </div>
         <div
-          className={`die ${isRolling ? 'rolling' : ''}`}
+          key={`die-2-${animationKeys[1]}`}
+          className={`die rolling`}
           style={{ backgroundColor: results[1] || '#ccc' }}
         >
           {results[1] ? '🎲' : '?'}
