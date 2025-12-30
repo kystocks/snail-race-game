@@ -1,0 +1,585 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  color: white;
+}
+
+.app h1 {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Prediction Screen */
+.prediction-screen {
+  background: white;
+  color: #333;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.prediction-screen h2 {
+  color: #667eea;
+  margin-bottom: 15px;
+}
+
+.prediction-screen p {
+  margin-bottom: 30px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.prediction-group {
+  margin-bottom: 25px;
+}
+
+.prediction-group label {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.prediction-group select {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.prediction-group select:hover {
+  border-color: #667eea;
+}
+
+.prediction-group select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.error-message {
+  background: #fee;
+  color: #c33;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #c33;
+}
+
+.start-race-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.start-race-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.start-race-button:active {
+  transform: translateY(0);
+}
+
+/* Game Board */
+.game-board {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.predictions-display {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.prediction-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Dice */
+.dice-container {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.dice-container h2 {
+  color: #667eea;
+  margin-bottom: 20px;
+}
+
+.dice-pair {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 15px;
+}
+
+.die {
+  width: 100px;
+  height: 100px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s;
+}
+
+.die.rolling {
+  animation: roll 0.5s ease-in-out;
+}
+
+@keyframes roll {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(90deg) scale(1.1); }
+  50% { transform: rotate(180deg) scale(0.9); }
+  75% { transform: rotate(270deg) scale(1.1); }
+}
+
+.dice-result {
+  color: #667eea;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Controls */
+.controls {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.roll-button {
+  padding: 15px 40px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.roll-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.roll-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.roll-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Race Track */
+.race-track {
+  margin: 30px 0;
+  padding: 20px;
+  background: linear-gradient(to bottom, #87ceeb 0%, #98d8c8 100%);
+  border-radius: 15px;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.track-row {
+  display: grid;
+  grid-template-columns: 120px repeat(9, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.track-row:last-child {
+  margin-bottom: 0;
+}
+
+.snail-label {
+  padding: 12px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+
+.track-space {
+  aspect-ratio: 1;
+  background-color: #f0e68c;
+  border: 3px solid #8b7355;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 50px;
+  transition: background-color 0.3s;
+}
+
+.track-space.start {
+  background-color: #90EE90;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(255, 255, 255, 0.3) 10px,
+    rgba(255, 255, 255, 0.3) 20px
+  );
+}
+
+.track-space.start::after {
+  content: 'START';
+  position: absolute;
+  font-size: 0.6rem;
+  font-weight: bold;
+  color: #2d5016;
+  bottom: 2px;
+}
+
+.track-space.finish {
+  background-color: #FFD700;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #FFD700,
+    #FFD700 10px,
+    #FFA500 10px,
+    #FFA500 20px
+  );
+  animation: finish-glow 2s ease-in-out infinite;
+}
+
+.track-space.finish::after {
+  content: 'FINISH';
+  position: absolute;
+  font-size: 0.6rem;
+  font-weight: bold;
+  color: #8b4513;
+  bottom: 2px;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+@keyframes finish-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+  }
+}
+
+.snail {
+  font-size: 2rem;
+  animation: wiggle 0.5s ease-in-out;
+  transition: transform 0.5s ease-in-out;
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(-3px) rotate(-5deg);
+  }
+  75% {
+    transform: translateX(3px) rotate(5deg);
+  }
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 1024px) {
+  .track-row {
+    grid-template-columns: 100px repeat(9, 1fr);
+    gap: 6px;
+  }
+
+  .snail-label {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+
+  .track-space {
+    min-height: 40px;
+  }
+
+  .snail {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .track-row {
+    grid-template-columns: 80px repeat(9, 1fr);
+    gap: 4px;
+  }
+
+  .snail {
+    font-size: 1.2rem;
+  }
+
+  .track-space {
+    min-height: 35px;
+  }
+}
+
+/* Winner Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.winner-modal {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.winner-modal h2 {
+  color: #667eea;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.winner-modal h3 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+/* Race Results */
+.race-results {
+  background: #f8f9fa;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.result-item:last-child {
+  margin-bottom: 0;
+}
+
+.result-label {
+  color: #666;
+  font-weight: 600;
+}
+
+.result-value {
+  color: #333;
+}
+
+/* Prediction Results */
+.prediction-results {
+  background: #f0f8ff;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+
+.prediction-check {
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+}
+
+.prediction-check span {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.prediction-check .correct {
+  background: #d4edda;
+  color: #155724;
+  font-weight: bold;
+}
+
+.prediction-check .incorrect {
+  background: #f8d7da;
+  color: #721c24;
+  font-weight: bold;
+}
+
+.perfect-prediction {
+  margin-top: 20px;
+  padding: 15px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  color: #8b4513;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border-radius: 8px;
+  animation: celebrate 0.6s ease-in-out;
+}
+
+@keyframes celebrate {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.partial-prediction {
+  margin-top: 15px;
+  padding: 12px;
+  background: #fff3cd;
+  color: #856404;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.no-prediction {
+  margin-top: 15px;
+  padding: 12px;
+  background: #f8d7da;
+  color: #721c24;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+/* Finish Order */
+.finish-order {
+  background: #fff;
+  padding: 25px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+
+.finish-order ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.finish-order li {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  gap: 12px;
+}
+
+.finish-order li:last-child {
+  margin-bottom: 0;
+}
+
+.position-number {
+  font-weight: bold;
+  color: #667eea;
+  font-size: 1.3rem;
+  min-width: 30px;
+}
+
+.color-indicator {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.snail-name {
+  flex-grow: 1;
+  font-weight: 600;
+  color: #333;
+}
+
+.medal {
+  font-size: 1.5rem;
+  margin-left: auto;
+}
