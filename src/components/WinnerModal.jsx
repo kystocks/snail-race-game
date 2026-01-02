@@ -3,10 +3,23 @@ function WinnerModal({ winner, loser, predictions, finishOrder, totalRolls, onRe
   const loserCorrect = predictions.loser === loser;
   const bothCorrect = winnerCorrect && loserCorrect;
 
+  // Function to determine text color for accessibility
+  const getTextColor = (bgColor) => {
+    const lightColors = ['yellow', 'orange'];
+    return lightColors.includes(bgColor) ? '#000' : '#fff';
+  };
+
+  // Function to get better background color for accessibility
+  const getBgColor = (color) => {
+    // Use darker red for better contrast
+    if (color === 'red') return '#c00';
+    return color;
+  };
+
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="race-complete-heading">
       <div className="winner-modal">
-        <h2>🏁 Race Complete! 🏁</h2>
+        <h2 id="race-complete-heading">🏁 Race Complete! 🏁</h2>
 
         {/* Race Results */}
         <div className="race-results">
@@ -15,8 +28,8 @@ function WinnerModal({ winner, loser, predictions, finishOrder, totalRolls, onRe
             <span
               className="result-value"
               style={{
-                backgroundColor: winner,
-                color: 'white',
+                backgroundColor: getBgColor(winner),
+                color: getTextColor(winner),
                 padding: '8px 16px',
                 borderRadius: '8px',
                 fontWeight: 'bold',
@@ -33,8 +46,8 @@ function WinnerModal({ winner, loser, predictions, finishOrder, totalRolls, onRe
             <span
               className="result-value"
               style={{
-                backgroundColor: loser,
-                color: 'white',
+                backgroundColor: getBgColor(loser),
+                color: getTextColor(loser),
                 padding: '8px 16px',
                 borderRadius: '8px',
                 fontWeight: 'bold',

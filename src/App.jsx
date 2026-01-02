@@ -130,27 +130,29 @@ function App() {
   const checkRaceStatus = (positions) => {
     const finished = COLORS.filter(color => positions[color] === TRACK_LENGTH - 1);
 
-    if (finished.length === 1 && !winner) {
-      // First snail crossed finish line
-      setWinner(finished[0]);
-      setFinishOrder([finished[0]]);
-    } else if (finished.length > 1) {
-      // Track finish order
-      const newFinishers = finished.filter(color => !finishOrder.includes(color));
+    // Update finish order whenever snails cross the line
+    setFinishOrder(prevOrder => {
+      // Find snails that finished but aren't in the order yet
+      const newFinishers = finished.filter(color => !prevOrder.includes(color));
+      
       if (newFinishers.length > 0) {
-        setFinishOrder(prev => [...prev, ...newFinishers]);
+        const updatedOrder = [...prevOrder, ...newFinishers];
+        
+        // Set winner if this is the first finisher
+        if (updatedOrder.length === 1) {
+          setWinner(updatedOrder[0]);
+        }
+        
+        // End game if all 6 snails have finished
+        if (updatedOrder.length === 6) {
+          setLoser(updatedOrder[5]); // Last snail in order
+          setTimeout(() => setGamePhase('finished'), 200);
+        }
+        
+        return updatedOrder;
       }
-    }
-
-    // Check if all snails finished (last one crosses)
-    if (finished.length === 6) {
-      const lastSnail = COLORS.find(color => !finishOrder.includes(color));
-      if (lastSnail) {
-        setLoser(lastSnail);
-        setFinishOrder(prev => [...prev, lastSnail]);
-        setGamePhase('finished');
-      }
-    }
+      return prevOrder;
+    });
   };
 
   // Reset game
@@ -167,28 +169,40 @@ function App() {
   };
 
   return (
-    <div className="app">
+    <main className="app">
       <h1>🐌 Snails' Pace Race</h1>
 
+      {/* Screen reader announcements */}
+      <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {gamePhase === 'prediction' && 'Make your predictions for the race'}
+        {gamePhase === 'racing' && `Race in progress. ${totalRolls} rolls so far.`}
+        {gamePhase === 'finished' && `Race complete! ${winner} won and ${loser} came in last.`}
+      </div>
+
       {gamePhase === 'prediction' && (
-        <PredictionScreen
-          colors={COLORS}
-          onSubmit={handlePredictionsSubmit}
-        />
+        <section aria-label="Make predictions">
+          <PredictionScreen
+            colors={COLORS}
+            onSubmit={handlePredictionsSubmit}
+          />
+        </section>
       )}
 
       {gamePhase === 'racing' && (
-        <GameBoard
-          colors={COLORS}
-          snailPositions={snailPositions}
-          trackLength={TRACK_LENGTH}
-          diceResults={diceResults}
-          isRolling={isRolling}
-          onRoll={rollDice}
-          predictions={predictions}
-          totalRolls={totalRolls}
-          diceAnimationKeys={diceAnimationKeys}
-        />
+        <section aria-label="Race in progress">
+          <GameBoard
+            colors={COLORS}
+            snailPositions={snailPositions}
+            trackLength={TRACK_LENGTH}
+            diceResults={diceResults}
+            isRolling={isRolling}
+            onRoll={rollDice}
+            predictions={predictions}
+            totalRolls={totalRolls}
+            diceAnimationKeys={diceAnimationKeys}
+            finishOrder={finishOrder}
+          />
+        </section>
       )}
 
       {gamePhase === 'finished' && (
@@ -201,7 +215,7 @@ function App() {
           onReset={resetGame}
         />
       )}
-    </div>
+    </main>
   );
 }
 

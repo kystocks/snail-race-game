@@ -2,7 +2,21 @@ import RaceTrack from './RaceTrack';
 import Dice from './Dice';
 import Controls from './Controls';
 
-function GameBoard({ colors, snailPositions, trackLength, diceResults, isRolling, onRoll, predictions, totalRolls, diceAnimationKeys }) {
+function GameBoard({ colors, snailPositions, trackLength, diceResults, isRolling, onRoll, predictions, totalRolls, diceAnimationKeys, finishOrder }) {
+  // Function to determine text color for accessibility
+  const getTextColor = (bgColor) => {
+    // Colors that need dark text for contrast
+    const lightColors = ['yellow', 'orange'];
+    return lightColors.includes(bgColor) ? '#000' : '#fff';
+  };
+
+  // Function to get better background color for accessibility
+  const getBgColor = (color) => {
+    // Use darker red for better contrast
+    if (color === 'red') return '#c00';
+    return color;
+  };
+
   return (
     <div className="game-board">
       {/* Predictions Display */}
@@ -10,8 +24,8 @@ function GameBoard({ colors, snailPositions, trackLength, diceResults, isRolling
         <div className="prediction-item">
           <span>🏆 Winner Prediction:</span>
           <span className="prediction-color" style={{
-            backgroundColor: predictions.winner,
-            color: 'white',
+            backgroundColor: getBgColor(predictions.winner),
+            color: getTextColor(predictions.winner),
             padding: '4px 12px',
             borderRadius: '4px',
             fontWeight: 'bold'
@@ -22,8 +36,8 @@ function GameBoard({ colors, snailPositions, trackLength, diceResults, isRolling
         <div className="prediction-item">
           <span>🐌 Last Place Prediction:</span>
           <span className="prediction-color" style={{
-            backgroundColor: predictions.loser,
-            color: 'white',
+            backgroundColor: getBgColor(predictions.loser),
+            color: getTextColor(predictions.loser),
             padding: '4px 12px',
             borderRadius: '4px',
             fontWeight: 'bold'
@@ -33,7 +47,7 @@ function GameBoard({ colors, snailPositions, trackLength, diceResults, isRolling
         </div>
         <div className="prediction-item">
           <span>🎲 Total Rolls:</span>
-          <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>{totalRolls}</span>
+          <span style={{ fontWeight: 'bold', fontSize: '1.2rem', minWidth: '30px', display: 'inline-block', textAlign: 'center' }}>{totalRolls}</span>
         </div>
       </div>
 
@@ -45,6 +59,7 @@ function GameBoard({ colors, snailPositions, trackLength, diceResults, isRolling
         colors={colors}
         snailPositions={snailPositions}
         trackLength={trackLength}
+        finishOrder={finishOrder || []}
       />
 
       {/* Controls */}

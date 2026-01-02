@@ -41,7 +41,11 @@ function PredictionScreen({ colors, onSubmit }) {
           >
             <option value="">-- Select a snail --</option>
             {colors.map(color => (
-              <option key={color} value={color}>
+              <option 
+                key={color} 
+                value={color}
+                disabled={color === loserPrediction}
+              >
                 {color.charAt(0).toUpperCase() + color.slice(1)} Snail
               </option>
             ))}
@@ -59,7 +63,11 @@ function PredictionScreen({ colors, onSubmit }) {
           >
             <option value="">-- Select a snail --</option>
             {colors.map(color => (
-              <option key={color} value={color}>
+              <option 
+                key={color} 
+                value={color}
+                disabled={color === winnerPrediction}
+              >
                 {color.charAt(0).toUpperCase() + color.slice(1)} Snail
               </option>
             ))}

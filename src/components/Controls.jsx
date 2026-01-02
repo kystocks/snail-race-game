@@ -5,6 +5,8 @@ function Controls({ onRoll, isRolling }) {
         className="roll-button"
         onClick={onRoll}
         disabled={isRolling}
+        aria-label={isRolling ? "Rolling dice, please wait" : "Roll dice to move snails"}
+        aria-live="polite"
       >
         {isRolling ? '🎲 Rolling...' : '🎲 Roll Dice'}
       </button>

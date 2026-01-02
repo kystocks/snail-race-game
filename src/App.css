@@ -8,6 +8,9 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .app {
@@ -179,6 +182,22 @@ body {
   75% { transform: rotate(270deg) scale(1.1); }
 }
 
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .die.rolling {
+    animation: none;
+  }
+  
+  .die.rolling-no-motion {
+    animation: pulse 0.3s ease-in-out;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+}
+
 .dice-result {
   color: #667eea;
   font-size: 1.2rem;
@@ -248,6 +267,22 @@ body {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   font-size: 0.9rem;
   text-transform: capitalize;
+}
+
+/* Better contrast for light-colored snail labels */
+.snail-label.yellow {
+  color: #000;
+  text-shadow: none;
+}
+
+.snail-label.orange {
+  color: #000;
+  text-shadow: none;
+}
+
+.snail-label.red {
+  color: #fff;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .track-space {
@@ -332,6 +367,17 @@ body {
   }
 }
 
+/* Respect reduced motion for snails */
+@media (prefers-reduced-motion: reduce) {
+  .snail {
+    animation: none;
+  }
+  
+  .track-space.finish {
+    animation: none;
+  }
+}
+
 /* Responsive design for smaller screens */
 @media (max-width: 1024px) {
   .track-row {
@@ -395,8 +441,8 @@ body {
 .winner-modal {
   background: white;
   border-radius: 20px;
-  padding: 40px;
-  max-width: 600px;
+  padding: 25px;
+  max-width: 750px;
   width: 90%;
   max-height: 90vh;
   overflow-y: auto;
@@ -418,30 +464,32 @@ body {
 .winner-modal h2 {
   color: #667eea;
   text-align: center;
-  margin-bottom: 30px;
-  font-size: 2rem;
+  margin-bottom: 15px;
+  font-size: 1.6rem;
 }
 
 .winner-modal h3 {
   color: #333;
-  margin-bottom: 15px;
-  font-size: 1.3rem;
+  margin-bottom: 12px;
+  font-size: 1.2rem;
 }
 
 /* Race Results */
 .race-results {
   background: #f8f9fa;
-  padding: 25px;
+  padding: 15px;
   border-radius: 12px;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
 .result-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  font-size: 1.1rem;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 1rem;
 }
 
 .result-item:last-child {
@@ -460,14 +508,14 @@ body {
 /* Prediction Results */
 .prediction-results {
   background: #f0f8ff;
-  padding: 25px;
+  padding: 15px;
   border-radius: 12px;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 
 .prediction-check {
-  margin-bottom: 12px;
-  font-size: 1.1rem;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
 }
 
 .prediction-check span {
@@ -489,12 +537,12 @@ body {
 }
 
 .perfect-prediction {
-  margin-top: 20px;
-  padding: 15px;
+  margin-top: 15px;
+  padding: 12px;
   background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
   color: #8b4513;
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: bold;
   border-radius: 8px;
   animation: celebrate 0.6s ease-in-out;
@@ -506,23 +554,23 @@ body {
 }
 
 .partial-prediction {
-  margin-top: 15px;
-  padding: 12px;
+  margin-top: 12px;
+  padding: 10px;
   background: #fff3cd;
   color: #856404;
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: bold;
   border-radius: 8px;
 }
 
 .no-prediction {
-  margin-top: 15px;
-  padding: 12px;
+  margin-top: 12px;
+  padding: 10px;
   background: #f8d7da;
   color: #721c24;
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: bold;
   border-radius: 8px;
 }
@@ -530,10 +578,10 @@ body {
 /* Finish Order */
 .finish-order {
   background: #fff;
-  padding: 25px;
+  padding: 15px;
   border: 2px solid #e9ecef;
   border-radius: 12px;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 
 .finish-order ol {
@@ -545,12 +593,12 @@ body {
 .finish-order li {
   display: flex;
   align-items: center;
-  padding: 12px;
-  margin-bottom: 10px;
+  padding: 8px;
+  margin-bottom: 6px;
   background: #f8f9fa;
   border-radius: 8px;
-  font-size: 1.1rem;
-  gap: 12px;
+  font-size: 0.95rem;
+  gap: 10px;
 }
 
 .finish-order li:last-child {
@@ -559,16 +607,16 @@ body {
 
 .position-number {
   font-weight: bold;
-  color: #667eea;
-  font-size: 1.3rem;
-  min-width: 30px;
+  color: #4a5ab3;
+  font-size: 1.1rem;
+  min-width: 25px;
 }
 
 .color-indicator {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   border-radius: 50%;
-  border: 3px solid #fff;
+  border: 2px solid #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   flex-shrink: 0;
 }
@@ -580,6 +628,42 @@ body {
 }
 
 .medal {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   margin-left: auto;
+}
+
+/* Play Again Button */
+.play-again-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.play-again-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.play-again-button:active {
+  transform: translateY(0);
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
