@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import PredictionScreen from './components/PredictionScreen';
 import GameBoard from './components/GameBoard';
@@ -154,6 +154,40 @@ function App() {
       return prevOrder;
     });
   };
+
+  // Save race result to Django API
+  const saveRaceResult = async (winnerColor, totalRollCount) => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/races/create/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          winner_color: winnerColor,
+          total_rolls: totalRollCount,
+          // Optional: add second_place and last_place if you want
+          // second_place: finishOrder[1],
+          // last_place: loser
+        })
+      });
+      
+      if (response.ok) {
+        console.log('Race result saved successfully!');
+      } else {
+        console.error('Failed to save race result:', response.status);
+      }
+    } catch (error) {
+      console.error('Error saving race result:', error);
+    }
+  };
+
+  // Save race when it finishes
+  useEffect(() => {
+    if (gamePhase === 'finished' && winner && totalRolls > 0) {
+      saveRaceResult(winner, totalRolls);
+    }
+  }, [gamePhase, winner, totalRolls]);
 
   // Reset game
   const resetGame = () => {
