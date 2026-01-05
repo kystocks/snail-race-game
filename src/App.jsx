@@ -156,7 +156,7 @@ function App() {
   };
 
   // Save race result to Django API
-  const saveRaceResult = async (winnerColor, totalRollCount) => {
+  const saveRaceResult = async (winnerColor, secondPlace, lastPlace, totalRollCount) => {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/races/create/', {
         method: 'POST',
@@ -165,10 +165,9 @@ function App() {
         },
         body: JSON.stringify({
           winner_color: winnerColor,
+          second_place: secondPlace,
+          last_place: lastPlace,
           total_rolls: totalRollCount,
-          // Optional: add second_place and last_place if you want
-          // second_place: finishOrder[1],
-          // last_place: loser
         })
       });
       
@@ -184,10 +183,10 @@ function App() {
 
   // Save race when it finishes
   useEffect(() => {
-    if (gamePhase === 'finished' && winner && totalRolls > 0) {
-      saveRaceResult(winner, totalRolls);
+    if (gamePhase === 'finished' && winner && loser && finishOrder.length === 6 && totalRolls > 0) {
+      saveRaceResult(winner, finishOrder[1], loser, totalRolls);
     }
-  }, [gamePhase, winner, totalRolls]);
+  }, [gamePhase, winner, loser, finishOrder, totalRolls]);
 
   // Reset game
   const resetGame = () => {
