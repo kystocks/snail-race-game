@@ -68,8 +68,17 @@ body {
   border: 2px solid #ddd;
   border-radius: 8px;
   background: white;
+  color: #333;
   cursor: pointer;
   transition: border-color 0.3s;
+  appearance: auto;
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+}
+
+.prediction-group select option {
+  color: #333;
+  background: white;
 }
 
 .prediction-group select:hover {
