@@ -2,6 +2,55 @@
 
 A full-stack web application based on the classic children's board game "Snail's Pace Race."
 
+## Version 1.2.0 - Production Deployment
+**Date:** January 5, 2026  
+**Goal:** Deploy Django backend to production and integrate with GitHub Pages frontend
+
+### Features Added
+- Production deployment to PythonAnywhere (`https://kstocks.pythonanywhere.com`)
+- MySQL database replacing SQLite for production
+- Environment-based API URL configuration in React frontend
+- API root endpoint showing available endpoints and project information
+- Separate production settings file (`settings_production.py`)
+
+### Technical Changes
+- **Backend:**
+  - Deployed to PythonAnywhere at `kstocks.pythonanywhere.com`
+  - MySQL database configuration (production only)
+  - WSGI configuration for production server
+  - Production settings separate from development
+  - CORS configured for GitHub Pages domain
+  
+- **Frontend:**
+  - Environment variables for API URLs (`.env.development` and `.env.production`)
+  - Automatic switching between local and production APIs
+  - Successfully deployed to GitHub Pages with production API integration
+
+### Deployment Architecture
+- **Local Development:**
+  - React dev server: `http://localhost:5173`
+  - Django dev server: `http://127.0.0.1:8000`
+  - SQLite database
+  
+- **Production:**
+  - Frontend: `https://kystocks.github.io/snail-race-game/`
+  - Backend API: `https://kstocks.pythonanywhere.com/api/`
+  - MySQL database on PythonAnywhere
+
+### API Endpoints (Production)
+- Root: `https://kstocks.pythonanywhere.com/` (API information)
+- List races: `https://kstocks.pythonanywhere.com/api/races/`
+- Create race: `https://kstocks.pythonanywhere.com/api/races/create/`
+- Statistics: `https://kstocks.pythonanywhere.com/api/stats/`
+
+### Next Steps (v1.3.0)
+- Add player tag input (3-character When2meet style)
+- Track predictions with player attribution
+- Calculate prediction accuracy per player
+- Simple leaderboard display
+
+---
+
 ## Version 1.1.0 - Backend API Integration
 **Date:** January 5, 2026  
 **Goal:** Establish backend API and integrate with React frontend
@@ -35,11 +84,6 @@ A full-stack web application based on the classic children's board game "Snail's
 - Two local servers running simultaneously
 - React dev server (Vite) on port 5173
 - Django dev server on port 8000
-
-### Next Steps (v1.2.0)
-- Deploy Django backend to PythonAnywhere
-- Migrate from SQLite to MySQL
-- Update frontend to use production API URL
 
 ---
 
@@ -76,12 +120,7 @@ A full-stack web application based on the classic children's board game "Snail's
 
 ## Roadmap
 
-### v1.2.0 - Production Deployment (Next)
-- Deploy Django backend to PythonAnywhere with MySQL
-- Update React frontend to use production API URL
-- Ensure GitHub Pages deployment works with backend
-
-### v1.3.0 - Player Tags & Prediction Tracking
+### v1.3.0 - Player Tags & Prediction Tracking (Next)
 - Add 3-character player tag input (When2meet style)
 - Track predicted_winner and predicted_loser
 - Calculate prediction accuracy per player
