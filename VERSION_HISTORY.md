@@ -2,6 +2,74 @@
 
 A full-stack web application based on the classic children's board game "Snail's Pace Race."
 
+## Version 1.2.4 - Code Quality & Reliability Improvements
+**Date:** January 6, 2026  
+**Goal:** Improve maintainability, add API protection, and enhance save reliability
+
+### Frontend Improvements
+- **Shared Constants:**
+  - Created `src/constants.js` with `SNAIL_COLORS` and `TRACK_LENGTH` exports
+  - Updated `App.jsx` to import and use shared constants
+  - Updated `RaceStats.jsx` to derive color list from constants
+  - Eliminates hardcoded color arrays across multiple files
+  - Single source of truth for game configuration
+
+- **Retry Logic for Saves:**
+  - Created `src/utils/retry.js` with `retryWithBackoff` utility function
+  - Implements exponential backoff retry strategy (1s, 2s, 4s delays)
+  - Automatically retries failed saves up to 3 times before giving up
+  - Logs retry attempts to console for debugging
+  - Improves reliability when network is temporarily unavailable
+  - Updated error message to include connection hint
+
+### Backend Improvements
+- **Shared Constants:**
+  - Created `races/constants.py` with `SNAIL_COLORS` and `SNAIL_COLOR_VALUES` exports
+  - Updated `models.py` to import and use shared constants
+  - Updated `serializers.py` to use shared constants for validation
+  - Single source of truth for valid snail colors
+  - Easier to maintain if colors are ever added/removed
+
+- **API Rate Limiting:**
+  - Added DRF throttling configuration in `settings.py`
+  - Limits anonymous users to 100 requests per hour
+  - Prevents API abuse and excessive load
+  - Uses Django REST Framework's built-in `AnonRateThrottle`
+  - Returns HTTP 429 (Too Many Requests) when limit exceeded
+
+### Technical Benefits
+- **Maintainability:** Color changes only need to happen in one place per codebase
+- **Reliability:** Save operations now resilient to temporary network issues
+- **Security:** API protected from abuse and excessive requests
+- **Code Quality:** Eliminates duplication and follows DRY principles
+
+### Files Modified
+- **Frontend:**
+  - `src/constants.js` (new)
+  - `src/utils/retry.js` (new)
+  - `src/App.jsx`
+  - `src/components/RaceStats.jsx`
+
+- **Backend:**
+  - `races/constants.py` (new)
+  - `races/models.py`
+  - `races/serializers.py`
+  - `snailrace/settings.py`
+
+### What This Fixes
+- ❌ Hardcoded colors in multiple places (frontend and backend)
+- ❌ No retry logic for failed saves (network blips = lost data)
+- ❌ No rate limiting (API could be abused)
+- ❌ Code duplication across components
+
+### Testing
+- Verified shared constants work in both frontend and backend
+- Tested retry logic by temporarily disabling backend
+- Confirmed rate limiting triggers at 100 requests/hour
+- All existing functionality continues to work
+
+---
+
 ## Version 1.2.3 - Security & Stability Improvements
 **Date:** January 6, 2026  
 **Goal:** Add comprehensive error handling, backend validation, and security improvements

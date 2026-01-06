@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { SNAIL_COLORS } from '../constants';
 
 const RaceStats = ({ apiBaseUrl, refreshTrigger }) => {
   const [stats, setStats] = useState(null);
@@ -54,14 +55,10 @@ const RaceStats = ({ apiBaseUrl, refreshTrigger }) => {
   }
 
   // Calculate most winning color
-  const colorWins = {
-    red: stats.red || 0,
-    blue: stats.blue || 0,
-    yellow: stats.yellow || 0,
-    green: stats.green || 0,
-    orange: stats.orange || 0,
-    purple: stats.purple || 0,
-  };
+  const colorWins = SNAIL_COLORS.reduce((acc, color) => {
+    acc[color] = stats[color] || 0;
+    return acc;
+  }, {});
 
   const maxWins = Math.max(...Object.values(colorWins));
   const topColors = Object.entries(colorWins)

@@ -4,10 +4,11 @@ import PredictionScreen from './components/PredictionScreen';
 import GameBoard from './components/GameBoard';
 import WinnerModal from './components/WinnerModal';
 import RaceStats from './components/RaceStats';
+import { SNAIL_COLORS, TRACK_LENGTH } from './constants';
+import { retryWithBackoff } from './utils/retry';
 
-// Game constants
-const COLORS = ['red', 'blue', 'yellow', 'green', 'orange', 'purple'];
-const TRACK_LENGTH = 9; // start(0) + 7 spaces + finish(8)
+// Use SNAIL_COLORS as COLORS for compatibility with existing code
+const COLORS = SNAIL_COLORS;
 
 // API base URL from environment variable
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
@@ -167,32 +168,36 @@ function App() {
     });
   };
 
-  // Save race result to Django API
+  // Save race result to Django API with retry logic
   const saveRaceResult = async (winnerColor, secondPlace, lastPlace, totalRollCount) => {
     setIsSaving(true);
     setSaveError(null);
     setSaveSuccess(false);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/races/create/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          winner_color: winnerColor,
-          second_place: secondPlace,
-          last_place: lastPlace,
-          total_rolls: totalRollCount,
-        })
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to save race: HTTP ${response.status}`);
-      }
+      // Wrap the fetch in a retry function
+      await retryWithBackoff(async () => {
+        const response = await fetch(`${API_BASE_URL}/api/races/create/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            winner_color: winnerColor,
+            second_place: secondPlace,
+            last_place: lastPlace,
+            total_rolls: totalRollCount,
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Failed to save race: HTTP ${response.status}`);
+        }
 
-      const data = await response.json();
-      console.log('Race result saved successfully!', data);
+        return await response.json();
+      }, 3, 1000); // Max 3 retries, starting with 1 second delay
+
+      console.log('Race result saved successfully!');
       
       // Trigger stats refresh
       setStatsRefreshTrigger(prev => prev + 1);
@@ -204,8 +209,8 @@ function App() {
       }, 3000);
 
     } catch (error) {
-      console.error('Error saving race result:', error);
-      setSaveError(error.message || 'Failed to save race results');
+      console.error('Error saving race result after retries:', error);
+      setSaveError(error.message || 'Failed to save race results. Please check your connection.');
       
       // Keep error visible longer (5 seconds)
       setTimeout(() => {
