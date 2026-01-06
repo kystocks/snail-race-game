@@ -3,6 +3,7 @@ import './App.css';
 import PredictionScreen from './components/PredictionScreen';
 import GameBoard from './components/GameBoard';
 import WinnerModal from './components/WinnerModal';
+import RaceStats from './components/RaceStats';
 
 // Game constants
 const COLORS = ['red', 'blue', 'yellow', 'green', 'orange', 'purple'];
@@ -14,6 +15,9 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000
 function App() {
   // Game phases: 'prediction' -> 'racing' -> 'finished'
   const [gamePhase, setGamePhase] = useState('prediction');
+  
+  // Stats refresh trigger - increment to force stats refresh
+  const [statsRefreshTrigger, setStatsRefreshTrigger] = useState(0);
 
   // Snail positions (0 = start, 8 = finish)
   const [snailPositions, setSnailPositions] = useState(
@@ -176,6 +180,8 @@ function App() {
       
       if (response.ok) {
         console.log('Race result saved successfully!');
+        // Trigger stats refresh
+        setStatsRefreshTrigger(prev => prev + 1);
       } else {
         console.error('Failed to save race result:', response.status);
       }
@@ -207,40 +213,54 @@ function App() {
   return (
     <main className="app">
       <h1>🐌 Snails' Pace Race</h1>
+      
+      <div className="app-layout">
+        {/* Stats Sidebar */}
+        <aside className="stats-sidebar">
+          <RaceStats 
+            apiBaseUrl={API_BASE_URL} 
+            refreshTrigger={statsRefreshTrigger}
+          />
+        </aside>
 
-      {/* Screen reader announcements */}
-      <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
-        {gamePhase === 'prediction' && 'Make your predictions for the race'}
-        {gamePhase === 'racing' && `Race in progress. ${totalRolls} rolls so far.`}
-        {gamePhase === 'finished' && `Race complete! ${winner} won and ${loser} came in last.`}
+        {/* Main Game Area */}
+        <div className="game-container">
+          {/* Screen reader announcements */}
+          <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {gamePhase === 'prediction' && 'Make your predictions for the race'}
+            {gamePhase === 'racing' && `Race in progress. ${totalRolls} rolls so far.`}
+            {gamePhase === 'finished' && `Race complete! ${winner} won and ${loser} came in last.`}
+          </div>
+
+          {gamePhase === 'prediction' && (
+            <section aria-label="Make predictions">
+              <PredictionScreen
+                colors={COLORS}
+                onSubmit={handlePredictionsSubmit}
+              />
+            </section>
+          )}
+
+          {gamePhase === 'racing' && (
+            <section aria-label="Race in progress">
+              <GameBoard
+                colors={COLORS}
+                snailPositions={snailPositions}
+                trackLength={TRACK_LENGTH}
+                diceResults={diceResults}
+                isRolling={isRolling}
+                onRoll={rollDice}
+                predictions={predictions}
+                totalRolls={totalRolls}
+                diceAnimationKeys={diceAnimationKeys}
+                finishOrder={finishOrder}
+              />
+            </section>
+          )}
+        </div>
       </div>
 
-      {gamePhase === 'prediction' && (
-        <section aria-label="Make predictions">
-          <PredictionScreen
-            colors={COLORS}
-            onSubmit={handlePredictionsSubmit}
-          />
-        </section>
-      )}
-
-      {gamePhase === 'racing' && (
-        <section aria-label="Race in progress">
-          <GameBoard
-            colors={COLORS}
-            snailPositions={snailPositions}
-            trackLength={TRACK_LENGTH}
-            diceResults={diceResults}
-            isRolling={isRolling}
-            onRoll={rollDice}
-            predictions={predictions}
-            totalRolls={totalRolls}
-            diceAnimationKeys={diceAnimationKeys}
-            finishOrder={finishOrder}
-          />
-        </section>
-      )}
-
+      {/* Winner Modal (overlays everything) */}
       {gamePhase === 'finished' && (
         <WinnerModal
           winner={winner}
