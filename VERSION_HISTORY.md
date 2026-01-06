@@ -2,6 +2,70 @@
 
 A full-stack web application based on the classic children's board game "Snail's Pace Race."
 
+## Version 1.2.3 - Security & Stability Improvements
+**Date:** January 6, 2026  
+**Goal:** Add comprehensive error handling, backend validation, and security improvements
+
+### Frontend Improvements
+- **Error Handling & User Feedback:**
+  - Added try/catch error handling to `saveRaceResult()` function
+  - Added loading state (`isSaving`) during save operations
+  - Added error state (`saveError`) for failed saves
+  - Added success state (`saveSuccess`) for successful saves
+  - Created save status banner with visual feedback:
+    - Blue "💾 Saving..." during save operation
+    - Green "✅ Race results saved!" on success (auto-dismisses after 3s)
+    - Red "❌ Error message" on failure (auto-dismisses after 5s)
+  - Banner positioned above winner modal with proper z-index layering
+  - Accessible with `role="status"` and `aria-live="polite"`
+  - Auto-clear functionality prevents stale status messages
+
+### Backend Improvements
+- **Data Validation:**
+  - Added field-level validation for all color fields (`winner_color`, `second_place`, `last_place`)
+  - Added validation for `total_rolls` (must be >= 1)
+  - Added cross-field validation to prevent duplicate colors
+  - Clear error messages returned for validation failures
+  - Prevents invalid data from reaching the database
+
+- **Security (CORS):**
+  - Removed permissive `CORS_ALLOW_ALL_ORIGINS = True` setting
+  - Restricted CORS to specific allowed origins:
+    - `https://kystocks.github.io` (production frontend)
+    - `http://localhost:5173` (local development)
+    - `http://127.0.0.1:5173` (local development alternative)
+  - Follows security best practices for API protection
+
+### Technical Changes
+- **Files Modified (Frontend):**
+  - `src/App.jsx` - Added error handling states and save status banner
+  - `src/App.css` - Added save status banner styles with animations
+  
+- **Files Modified (Backend):**
+  - `races/serializers.py` - Added comprehensive validation methods
+  - `snailrace/settings.py` - Tightened CORS configuration
+
+### What This Fixes
+- ❌ Silent save failures (users now see clear feedback)
+- ❌ Invalid data reaching database (backend now validates all inputs)
+- ❌ Open CORS policy security risk (now restricted to approved origins)
+- ❌ No user feedback during saves (loading/success/error states now visible)
+- ❌ Race results saved with impossible conditions (cross-field validation prevents this)
+
+### Testing
+- Verified save status banner appears above winner modal
+- Tested error display when backend is offline
+- Confirmed backend validation rejects invalid colors
+- Confirmed backend validation rejects duplicate colors
+- Verified CORS allows only specified origins
+- All functionality tested locally with positive results
+
+### Documentation Added
+- `test_validation.md` - Backend validation testing guide
+- `CORS_UPDATE.md` - CORS security update checklist
+
+---
+
 ## Version 1.2.2 - Race Statistics Visualization
 **Date:** January 5, 2026  
 **Goal:** Add responsive race statistics display with live data visualization

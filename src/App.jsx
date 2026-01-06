@@ -41,6 +41,11 @@ function App() {
   const [finishOrder, setFinishOrder] = useState([]);
   const [totalRolls, setTotalRolls] = useState(0);
 
+  // Save status
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
   // Handle predictions submission
   const handlePredictionsSubmit = (winnerPrediction, loserPrediction) => {
     setPredictions({
@@ -164,6 +169,10 @@ function App() {
 
   // Save race result to Django API
   const saveRaceResult = async (winnerColor, secondPlace, lastPlace, totalRollCount) => {
+    setIsSaving(true);
+    setSaveError(null);
+    setSaveSuccess(false);
+
     try {
       const response = await fetch(`${API_BASE_URL}/api/races/create/`, {
         method: 'POST',
@@ -178,15 +187,32 @@ function App() {
         })
       });
       
-      if (response.ok) {
-        console.log('Race result saved successfully!');
-        // Trigger stats refresh
-        setStatsRefreshTrigger(prev => prev + 1);
-      } else {
-        console.error('Failed to save race result:', response.status);
+      if (!response.ok) {
+        throw new Error(`Failed to save race: HTTP ${response.status}`);
       }
+
+      const data = await response.json();
+      console.log('Race result saved successfully!', data);
+      
+      // Trigger stats refresh
+      setStatsRefreshTrigger(prev => prev + 1);
+      setSaveSuccess(true);
+
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSaveSuccess(false);
+      }, 3000);
+
     } catch (error) {
       console.error('Error saving race result:', error);
+      setSaveError(error.message || 'Failed to save race results');
+      
+      // Keep error visible longer (5 seconds)
+      setTimeout(() => {
+        setSaveError(null);
+      }, 5000);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -208,11 +234,29 @@ function App() {
     setFinishOrder([]);
     setTotalRolls(0);
     setGamePhase('prediction');
+    
+    // Clear save status
+    setSaveError(null);
+    setSaveSuccess(false);
+    setIsSaving(false);
   };
 
   return (
     <main className="app">
       <h1>🐌 Snails' Pace Race</h1>
+      
+      {/* Save Status Banner */}
+      {(isSaving || saveError || saveSuccess) && (
+        <div 
+          className={`save-status ${isSaving ? 'saving' : ''} ${saveError ? 'error' : ''} ${saveSuccess ? 'success' : ''}`}
+          role="status"
+          aria-live="polite"
+        >
+          {isSaving && '💾 Saving race results...'}
+          {saveError && `❌ ${saveError}`}
+          {saveSuccess && '✅ Race results saved!'}
+        </div>
+      )}
       
       <div className="app-layout">
         {/* Stats Sidebar */}
