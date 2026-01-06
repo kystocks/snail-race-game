@@ -6,7 +6,29 @@ const RaceStats = ({ apiBaseUrl, refreshTrigger }) => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isExpanded, setIsExpanded] = useState(false); // Collapsed by default on mobile
+  
+  // Smart default: expanded on tablet (821-1024px), collapsed on mobile (≤820px)
+  const getDefaultExpanded = () => {
+    const width = window.innerWidth;
+    if (width > 1024) return true; // Desktop: always expanded (toggle hidden)
+    if (width > 820) return true;  // Tablet: expanded by default
+    return false;                   // Mobile: collapsed by default
+  };
+  
+  const [isExpanded, setIsExpanded] = useState(getDefaultExpanded());
+  
+  // Update expansion state on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width > 1024) {
+        setIsExpanded(true); // Always expanded on desktop
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchStats = async () => {

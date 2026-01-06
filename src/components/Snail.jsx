@@ -1,5 +1,5 @@
 function Snail() {
-  return <div>🐌</div>;
+  return <div className="snail">🐌</div>;
 }
 
 export default Snail;

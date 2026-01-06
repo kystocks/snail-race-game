@@ -1,6 +1,5 @@
 import RaceTrack from './RaceTrack';
 import Dice from './Dice';
-import Controls from './Controls';
 
 function GameBoard({ colors, snailPositions, trackLength, diceResults, isRolling, onRoll, predictions, totalRolls, diceAnimationKeys, finishOrder }) {
   // Function to determine text color for accessibility
@@ -58,8 +57,8 @@ function GameBoard({ colors, snailPositions, trackLength, diceResults, isRolling
         </div>
       </div>
 
-      {/* Dice */}
-      <Dice results={diceResults} isRolling={isRolling} animationKeys={diceAnimationKeys} />
+      {/* Dice with inline button */}
+      <Dice results={diceResults} isRolling={isRolling} animationKeys={diceAnimationKeys} onRoll={onRoll} />
 
       {/* Race Track */}
       <RaceTrack
@@ -67,12 +66,6 @@ function GameBoard({ colors, snailPositions, trackLength, diceResults, isRolling
         snailPositions={snailPositions}
         trackLength={trackLength}
         finishOrder={finishOrder || []}
-      />
-
-      {/* Controls */}
-      <Controls
-        onRoll={onRoll}
-        isRolling={isRolling}
       />
     </div>
   );
