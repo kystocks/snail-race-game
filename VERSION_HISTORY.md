@@ -2,6 +2,47 @@
 
 A full-stack web application based on the classic children's board game "Snail's Pace Race."
 
+## Version 1.2.2 - Race Statistics Visualization
+**Date:** January 5, 2026  
+**Goal:** Add responsive race statistics display with live data visualization
+
+### Features Added
+- RaceStats component displaying aggregate race data from backend API
+- Auto-refresh stats after each race completion
+- Visual breakdown of wins by color with horizontal bar charts
+- Summary cards showing total races and most winning colors
+- Collapsible stats panel with always-visible toggle button
+- Responsive side-by-side layout on desktop (stats 30%, game 70%)
+- Stacked vertical layout on mobile/tablet (≤820px breakpoint)
+
+### Technical Changes
+- Created `RaceStats.jsx` component with collapse/expand state management
+- Restructured `App.jsx` with `.app-layout` container for side-by-side layout
+- Added `statsRefreshTrigger` state to force stats refresh after race saves
+- Implemented responsive CSS with viewport-based sizing (`calc(100vw - 40px)`)
+- Removed fixed 1200px max-width constraint for full responsive behavior
+- Added comprehensive CSS for stats display including:
+  - Gradient stat cards
+  - Color-coded bar charts with smooth animations
+  - Responsive grid layouts
+  - Mobile collapse/expand transitions
+- Maintains WCAG 2.1 AA accessibility with proper ARIA attributes
+
+### UI/UX Improvements
+- Stats sidebar uses 30% of available viewport width (min 320px)
+- Game area uses remaining 70% of viewport width
+- Toggle button available on all screen sizes for user control
+- Stats collapsed by default on mobile, always expanded on desktop >820px
+- Smooth 0.3s transitions for collapse/expand animations
+- Color badges match game color scheme for consistency
+
+### Files Modified
+- `src/components/RaceStats.jsx` (new)
+- `src/App.jsx`
+- `src/App.css`
+
+---
+
 ## Version 1.2.1 - Accessibility & UI Fixes
 **Date:** January 5, 2026  
 **Goal:** Fix dropdown visibility and improve color contrast for WCAG 2.1 AA compliance
