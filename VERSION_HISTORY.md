@@ -2,6 +2,30 @@
 
 A full-stack web application based on the classic children's board game "Snail's Pace Race."
 
+## Version 1.2.1 - Accessibility & UI Fixes
+**Date:** January 5, 2026  
+**Goal:** Fix dropdown visibility and improve color contrast for WCAG 2.1 AA compliance
+
+### Fixes
+- Fixed dropdown text visibility in prediction screen
+  - Added explicit `color: #333` to select elements
+  - Added `appearance: auto` for proper browser rendering
+  - Styled option elements for consistent display
+- Improved color contrast for prediction badges
+  - Darkened blue: `#0056b3` (was pure blue)
+  - Darkened purple: `#6a0dad` (was pure purple)
+  - Darkened green: `#006400` (was pure green)
+  - Darkened red: `#c00` (was pure red)
+  - Orange and yellow use black text for readability
+- All color combinations now meet WCAG 2.1 AA contrast ratios (4.5:1 minimum)
+
+### Technical Changes
+- Updated `App.css` with explicit select styling
+- Enhanced `GameBoard.jsx` color mapping for accessibility
+- Maintains full accessibility compliance
+
+---
+
 ## Version 1.2.0 - Production Deployment
 **Date:** January 5, 2026  
 **Goal:** Deploy Django backend to production and integrate with GitHub Pages frontend

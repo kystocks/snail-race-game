@@ -12,9 +12,16 @@ function GameBoard({ colors, snailPositions, trackLength, diceResults, isRolling
 
   // Function to get better background color for accessibility
   const getBgColor = (color) => {
-    // Use darker red for better contrast
-    if (color === 'red') return '#c00';
-    return color;
+    // Use darker shades for better contrast with white text
+    const colorMap = {
+      'red': '#c00',      // Darker red
+      'blue': '#0056b3',  // Darker blue
+      'purple': '#6a0dad', // Darker purple
+      'green': '#006400',  // Darker green
+      'orange': '#ff8c00', // Keep orange (using dark text)
+      'yellow': '#ffd700'  // Keep yellow (using dark text)
+    };
+    return colorMap[color] || color;
   };
 
   return (
