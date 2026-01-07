@@ -2,6 +2,123 @@
 
 A full-stack web application based on the classic children's board game "Snail's Pace Race."
 
+## Version 1.3.0 - Responsive Redesign
+**Date:** January 6, 2026  
+**Goal:** Major UX overhaul for mobile devices with vertical track layout and responsive improvements
+
+### Mobile Vertical Track (≤820px)
+- **Complete Layout Transformation:**
+  - Track rotates 90°: snails now start at BOTTOM and race UPWARD to finish at TOP
+  - Six vertical columns (one per snail) instead of horizontal rows
+  - Snails rotated -90° to face upward with vertical wiggle animation
+  - Track spaces stack vertically with proper spacing (30px height)
+  - Color labels at bottom of each column with readable text
+  - Finish line at top with position numbers properly displayed
+  - Max height constraint (60vh) prevents track from overflowing
+
+### Smart Stats Toggle Behavior
+- **Desktop (>1024px):**
+  - Toggle button hidden completely
+  - Stats always visible and expanded
+  - Side-by-side layout with game board
+
+- **Tablet (821-1024px):**
+  - Toggle button visible
+  - Stats expanded by default
+  - Side-by-side layout maintained
+  - User can collapse if desired
+
+- **Mobile (≤820px):**
+  - Toggle button visible
+  - Stats collapsed by default
+  - Stacked vertical layout
+  - User can expand to view stats
+
+### Inline Dice & Button Layout
+- **UI Consolidation:**
+  - "Roll the Dice" button now appears inline with dice display
+  - Removed separate Controls component
+  - Dice component now accepts `onRoll` prop directly
+  - More compact layout saves vertical space
+  - Better visual hierarchy with dice and button grouped together
+
+### Responsive Improvements
+- **Max Width Constraint:**
+  - App container limited to 1800px width
+  - Prevents absurd stretching on ultra-wide monitors (>1800px)
+  - Content remains readable and well-proportioned
+
+- **Max Height for Game Board:**
+  - Game board limited to 90vh height with scroll if needed
+  - Prevents layout from breaking viewport on short screens
+  - Ensures all controls remain accessible
+
+### CSS Architecture Improvements
+- **Removed All `!important` Usage:**
+  - Refactored CSS cascade to use proper specificity
+  - Media queries structured with clear precedence
+  - Follows best practices for maintainable stylesheets
+
+- **Clean Media Query Structure:**
+  - Base styles defined first
+  - Mobile/tablet collapsible states (≤1024px)
+  - Desktop overrides (>1024px) use natural cascade
+  - No conflicting rules or specificity wars
+
+### Component Updates
+- **RaceTrack.jsx:**
+  - Added `track-columns-container` wrapper div
+  - Enables proper grid layout for vertical columns on mobile
+  - No changes to desktop/tablet rendering
+
+- **Snail.jsx:**
+  - Added `className="snail"` for CSS targeting
+  - Enables rotation and animation styling
+
+- **Dice.jsx:**
+  - Integrated button inline with dice display
+  - New `dice-and-button` and `dice-section` containers
+  - Accepts `onRoll` prop for button functionality
+
+- **GameBoard.jsx:**
+  - Removed separate `Controls` import
+  - Passes `onRoll` to `Dice` component
+  - Simplified component structure
+
+### Files Modified
+- `src/App.css` - Major responsive redesign with vertical track support
+- `src/components/RaceTrack.jsx` - Added container for vertical columns
+- `src/components/Snail.jsx` - Added className for styling
+- `src/components/Dice.jsx` - Integrated inline button
+- `src/components/GameBoard.jsx` - Removed Controls component
+- `src/components/RaceStats.jsx` - Smart default expansion logic
+
+### What This Fixes
+- ❌ Mobile horizontal scrolling and cramped layout
+- ❌ Stats toggle not working correctly across breakpoints
+- ❌ Excessive vertical space between dice and button
+- ❌ Layout breaking on ultra-wide monitors
+- ❌ Game board potentially requiring scrolling
+- ❌ CSS `!important` anti-patterns
+- ❌ Snail animation looking wrong when rotated
+
+### Testing
+- Verified vertical track on iPhone SE, iPhone 14 Pro, and various Android sizes
+- Confirmed stats toggle behavior at all three breakpoints
+- Tested inline button layout on desktop, tablet, and mobile
+- Verified max-width prevents stretching on ultra-wide displays
+- Confirmed snails rotate correctly and wiggle vertically on mobile
+- All existing functionality continues to work
+
+### Technical Notes
+- Vertical track uses CSS `flex-direction: column-reverse` to stack spaces bottom-to-top
+- Snail rotation uses `transform: rotate(-90deg)` for upward facing
+- Vertical wiggle animation uses `translateY` instead of `translateX`
+- Media queries at 820px, 1024px, and 1800px for responsive breakpoints
+- Smart stats expansion uses `window.innerWidth` on component mount
+
+---
+
 ## Version 1.2.4 - Code Quality & Reliability Improvements
 **Date:** January 6, 2026  
 **Goal:** Improve maintainability, add API protection, and enhance save reliability
