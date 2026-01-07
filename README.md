@@ -8,17 +8,18 @@ A full-stack web application based on the classic children's board game "Snail's
 
 ## 📋 Current Version
 
-**v1.2.3** - Security & Stability Improvements (January 6, 2026)
+**v1.3.0** - Responsive Redesign (January 6, 2026)
 
 ## ✨ Features
 
+- **Mobile-Optimized:** Vertical track on mobile with snails racing upward
 - **Accessible Game:** WCAG 2.1 AA compliant with screen reader support
 - **Race Predictions:** Predict winner and last place before race starts
 - **Animated Gameplay:** Smooth dice rolling and snail movement animations
 - **Live Statistics:** Real-time race statistics with visual breakdowns
 - **Persistent Data:** Race results saved to backend database
 - **Error Handling:** Clear user feedback for all operations
-- **Responsive Design:** Works on desktop, tablet, and mobile
+- **Responsive Design:** Adaptive layouts for desktop, tablet, and mobile
 
 ## 🛠 Tech Stack
 
